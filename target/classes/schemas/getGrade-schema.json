@@ -7,21 +7,9 @@
 				"description":"aaa",
 				"type":"string"
 			},
-			"username":{
-				"type":"string"
-			},
-			"password":{
-				"type":"string"
-			},
-			"company":{
-				"type":"string"
-			},
-			"baseInfo":{
-				"type":"string"
-			},
-			"status":{
+			"userId":{
 				"type":"string"
 			}
-		},
-	"required":["username","password"]
+			
+		}
 }
