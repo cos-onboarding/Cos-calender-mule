@@ -1,0 +1,27 @@
+{
+	"type":"object",
+	"$schema":"http://json-schema.org/draft-04/schema",
+	"id": "http://jsonschema.net",
+	"properties":{
+			"application":{
+				"description":"aaa",
+				"type":"string"
+			},
+			"username":{
+				"type":"string"
+			},
+			"password":{
+				"type":"string"
+			},
+			"company":{
+				"type":"string"
+			},
+			"baseInfo":{
+				"type":"string"
+			},
+			"status":{
+				"type":"string"
+			}
+		},
+	"required":["username","password"]
+}
