@@ -55,13 +55,15 @@ payload]]></dw:set-payload>
 payload]]></dw:set-payload>
         </dw:transform-message>
         <set-variable variableName="userId" value="#[payload.userId]" doc:name="Variable"/>
-        <db:select config-ref="MySQL_Configuration" doc:name="Database" doc:description="&#33719;&#21462;&#31561;&#32423;">
-            <db:parameterized-query><![CDATA[${sql.getGrade}]]></db:parameterized-query>
+        <db:select config-ref="MySQL_Configuration" doc:name="getRole" doc:description="&#33719;&#21462;&#31561;&#32423;">
+            <db:parameterized-query><![CDATA[${sql.getGradeGetRole}]]></db:parameterized-query>
+
         </db:select>
         <set-variable variableName="bid" value="#[payload[0].bid]" encoding="UTF-8" doc:name="Variable"/>
         <set-variable variableName="rid" value="#[payload[0].rid]" doc:name="Variable"/>
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[SELECT grade FROM role WHERE id = #[flowVars.rid]]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[${sql.getGradeGrade}]]></db:parameterized-query>
+
         </db:select>
         <set-variable variableName="grade" value="#[payload[0].grade]" encoding="UTF-8" doc:name="Variable"/>
         <dw:transform-message doc:name="Transform Message">
@@ -79,13 +81,10 @@ payload]]></dw:set-payload>
 payload]]></dw:set-payload>
         </dw:transform-message>
         <set-variable variableName="bid" value="#[payload.bid]" doc:name="Variable"/>
-        <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[SELECT b.user_name title,a.item_start_time start,a.info_id,a.type,'' color  
-FROM calender_schedule a 
-JOIN staff b on a.user_id = b.id 
-WHERE a.user_id in(
-SELECT id FROM staff WHERE branch_id = #[flowVars.bid]
-) ORDER BY a.item_start_time DESC]]></db:parameterized-query>
+
+        <db:select config-ref="MySQL_Configuration" doc:name="Uncomplete">
+            <db:parameterized-query><![CDATA[${sql.getAllTimeSchedule}]]></db:parameterized-query>
+
         </db:select>
 
         <dw:transform-message doc:name="Transform Message">
@@ -106,10 +105,8 @@ payload]]></dw:set-payload>
         <choice doc:name="Choice">
             <when expression="payload.userId !=''">
                 <db:select config-ref="MySQL_Configuration" doc:name="Database">
-                    <db:parameterized-query><![CDATA[SELECT b.user_name title,a.item_start_time start,a.info_id,a.type,'' color  
-FROM calender_schedule a 
-JOIN staff b on a.user_id = b.id 
-WHERE a.user_id = #[flowVars.userId] ORDER BY a.item_start_time DESC]]></db:parameterized-query>
+                    <db:parameterized-query><![CDATA[${sql.getCalendarTimeList}]]></db:parameterized-query>
+
                 </db:select>
                 <dw:transform-message doc:name="Transform Message">
                     <dw:set-payload><![CDATA[%dw 1.0
@@ -133,16 +130,11 @@ payload]]></dw:set-payload>
         <set-variable variableName="bid" value="#[payload.bid]" doc:name="Variable"/>
         <set-variable variableName="timeStamp" value="#[payload.timeStamp]" encoding="UTF-8" doc:name="Variable"/>
         <set-variable variableName="userId" value="#[payload.userId]" encoding="UTF-8" doc:name="Variable"/>
-
         <choice doc:name="Choice">
             <when expression="payload.timeStamp !=''&amp;&amp;payload.userId !=null">
                 <db:select config-ref="MySQL_Configuration" doc:name="Database" doc:description="&#28857;&#20987;&#26597;&#30475;&#27599;&#22825;&#26085;&#31243;">
-                    <db:dynamic-query><![CDATA[SELECT info_id infoId,item_id id,item_title title,item_body message,DATE_FORMAT(item_start_time,'%Y-%m-%d %H:%i:%s')
-dateTime,DATE_FORMAT(item_end_time,'%Y-%m-%d %H:%i:%s') endTime,user_name userName,user_id userId,type,branch_id bid 
-from calender_schedule 
-where info_id = #[flowVars.timeStamp] AND user_id = #[flowVars.userId]]]></db:dynamic-query>
+                    <db:dynamic-query><![CDATA[${sql.staffDaySchedule}]]></db:dynamic-query>
                 </db:select>
-
                 <dw:transform-message doc:name="Transform Message">
                     <dw:set-payload><![CDATA[%dw 1.0
 %output application/json
@@ -152,10 +144,7 @@ payload]]></dw:set-payload>
             </when>
             <otherwise>
                 <db:select config-ref="MySQL_Configuration" doc:name="Database">
-                    <db:parameterized-query><![CDATA[SELECT info_id infoId,DATE_FORMAT(item_start_time,'%Y-%m-%d %H:%i:%s')
-dateTime,DATE_FORMAT(item_end_time,'%Y-%m-%d %H:%i:%s') endTime,user_id userId,item_title title,item_body message,item_id id,type,branch_id bid FROM calender_schedule 
-WHERE info_id = #[flowVars.timeStamp] AND branch_id = #[flowVars.bid]]]></db:parameterized-query>
-
+                    <db:parameterized-query><![CDATA[${sql.managerDaySchedule}]]></db:parameterized-query>
                 </db:select>
                 <logger message="is null" level="INFO" doc:name="Logger"/>
                 <dw:transform-message doc:name="Transform Message">
@@ -167,9 +156,11 @@ payload]]></dw:set-payload>
             </otherwise>
         </choice>
     </flow>
+
     <flow name="getStaffList" doc:description="&#33719;&#21462;&#25152;&#26377;&#21592;&#24037;&#21015;&#34920;&#65288;&#38656;&#35201;&#25913;&#21160;&#65289;">
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[SELECT id,user_name userName FROM staff WHERE role_id = 1]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[${sql.getStaffList}]]></db:parameterized-query>
+
         </db:select>
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
@@ -189,7 +180,8 @@ payload]]></dw:set-payload>
         <set-variable variableName="schedule" value="#[payload.schedule]" encoding="UTF-8" doc:name="Variable_save"/>
         <set-variable variableName="scheduleDel" value="#[payload.scheduleDel]" doc:name="Variable_del"/>
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[SELECT COUNT(info_id)num FROM calender_info WHERE create_time = #[flowVars.time]]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[${sql.selectStatistics}]]></db:parameterized-query>
+
         </db:select>
 
         <set-variable variableName="num" value="#[payload[0].num" encoding="UTF-8" doc:name="Variable"/>
@@ -200,14 +192,16 @@ payload]]></dw:set-payload>
                     <foreach collection="#[flowVars.scheduleDel]" doc:name="For Each">
                         <set-payload value="#[payload]" doc:name="Set Payload"/>
                         <db:delete config-ref="MySQL_Configuration" doc:name="Database">
-                            <db:parameterized-query><![CDATA[DELETE FROM calender_schedule WHERE item_id=#[payload.id];]]></db:parameterized-query>
+                            <db:parameterized-query><![CDATA[${sql.delSchedule}]]></db:parameterized-query>
+
                         </db:delete>
                     </foreach>
                 </when>
 
                 <otherwise>
                     <db:insert config-ref="MySQL_Configuration" doc:name="Database">
-                        <db:parameterized-query><![CDATA[insert INTO calender_info (create_time) VALUES (#[flowVars.time])]]></db:parameterized-query>
+                        <db:parameterized-query><![CDATA[${sql.saveCalenderInfo}]]></db:parameterized-query>
+
 
                     </db:insert>
                     <logger message="#[flowVars.schedule]" level="INFO" category="123" doc:name="Logger"/>
@@ -218,33 +212,16 @@ payload]]></dw:set-payload>
                 <set-payload value="#[payload]" encoding="UTF-8" doc:name="Set Payload"/>
                 <logger message="#[payload.title]" level="INFO" category="456" doc:name="Logger"/>
                 <db:insert config-ref="MySQL_Configuration" doc:name="Database">
-                    <db:parameterized-query><![CDATA[INSERT INTO calender_schedule (
-	item_id,
-	info_id,
-	item_title,
-	item_body,
-	item_start_time,
-	item_end_time,
-	update_time,
-	type,
-	create_time,
-	user_id,
-	branch_id
-)
-VALUES
-(#[payload.id],#[payload.infoId],#[payload.title],#[payload.message],#[payload.dateTime],#[payload.endTime],NOW(),#[payload.type],NOW(),#[payload.userId],#[payload.bid])
-ON DUPLICATE KEY UPDATE item_title=#[payload.title],item_body=#[payload.message],item_start_time=#[payload.dateTime],item_end_time =#[payload.endTime],update_time = NOW(),type = #[payload.type],user_id = #[payload.userId],branch_id = #[payload.bid]]]></db:parameterized-query>
-
+                    <db:parameterized-query><![CDATA[${sql.saveCalenderSchedule}]]></db:parameterized-query>
                 </db:insert>
+
             </foreach>
 
         </transactional>
     </flow>
     <flow name="getAllBranch" doc:description="&#33719;&#21462;&#25152;&#26377;&#20998;&#34892;&#20197;&#21450;&#32463;&#29702;&#21517;&#31216;">
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[SELECT a.branch_name userName,a.branch_id id FROM branch_information a
-JOIN staff b ON a.branch_id = b.branch_id
-WHERE b.role_id = 2]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[${sql.getAllBranch}]]></db:parameterized-query>
         </db:select>
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
@@ -253,4 +230,5 @@ WHERE b.role_id = 2]]></db:parameterized-query>
 payload]]></dw:set-payload>
         </dw:transform-message>
     </flow>
+
 </mule>

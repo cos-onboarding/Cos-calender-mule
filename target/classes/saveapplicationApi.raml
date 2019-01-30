@@ -11,7 +11,9 @@ version: 1.0
 #      baseInfo:
 #        required: true
 #        type: string
-
+schemas:
+  loginJson: !include schemas/login-schema.json
+  getGradeJson: !include schemas/getGrade-schema.json
 #初始化加载日程数据
 /getCalendarTimeList:
   post:
@@ -50,7 +52,7 @@ version: 1.0
   post:
     body:
       application/json:     
-        schema: !include schemas/login-schema.json
+        schema: loginJson
     responses:
       200:
         body:
@@ -63,10 +65,7 @@ version: 1.0
   post:
     body:
       application/json:
-        example: |
-          {
-            "name":"admin"
-          }
+         schema: getGradeJson
     responses:
       200:
         body:
