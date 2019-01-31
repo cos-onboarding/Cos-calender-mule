@@ -3,13 +3,8 @@
 	"$schema":"http://json-schema.org/draft-04/schema",
 	"id": "http://jsonschema.net",
 	"properties":{
-			"application":{
-				"description":"aaa",
-				"type":"string"
-			},
 			"userId":{
 				"type":"string"
 			}
-			
 		}
 }

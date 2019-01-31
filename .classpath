@@ -9,7 +9,8 @@
 	<classpathentry exported="true" kind="con" path="MULE_RUNTIME/org.mule.tooling.server.3.9.1.ee"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry kind="src" path="src/main/wsdl"/>
-	<classpathentry kind="src" path="src/test/munit"/>
 	<classpathentry kind="lib" path="src/main/app/lib/mysql-connector-java-5.1.6-bin.jar"/>
+	<classpathentry kind="con" path="MUNIT_RUNTIME"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/munit"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
