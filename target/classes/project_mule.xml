@@ -22,9 +22,13 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/getAllTimeSchedule" action="post" content-type="application/json" flow-ref="getAllTimeSchedule"/>
         <apikit:flow-mapping resource="/getStaffList" action="post" content-type="application/json" flow-ref="getStaffList"/>
         <apikit:flow-mapping resource="/getAllBranch" action="post" content-type="application/json" flow-ref="getAllBranch"/>
+<<<<<<< HEAD
         <apikit:flow-mapping resource="/getHeadOfficeList" action="post" content-type="application/json" flow-ref="getHeadOfficeList"/>
         <apikit:flow-mapping resource="/getDayAllBranchScheduleList" action="post" content-type="application/json" flow-ref="getDayAllBranchSchedule"/>
         <apikit:flow-mapping resource="/getDayBranchStaffInfo" action="post" content-type="application/json" flow-ref="getDayBranchStaffInfo"/>
+=======
+        <apikit:flow-mapping resource="/dragAndDrop" action="post" content-type="application/json" flow-ref="dragAndDrop"/>
+>>>>>>> ea9ee4e0addb9a6f2a309b5c7fde8d6fb06f37b1
 
     </apikit:config>
     <context:property-placeholder location="db.properties"/>
@@ -281,6 +285,20 @@ payload]]></dw:set-payload>
 ---
 payload]]></dw:set-payload>
         </dw:transform-message>
+    </flow>
+    <flow name="dragAndDrop">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <set-variable variableName="id" value="#[payload.id]" encoding="UTF-8" doc:name="Variable"/>
+        <set-variable variableName="timeStamp" value="#[payload.timeStamp]" doc:name="Variable"/>
+        <set-variable variableName="timeDay" value="#[payload.timeDay]" doc:name="Variable"/>
+        <db:update config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.dragAndDrop}]]></db:parameterized-query>
+        </db:update>
     </flow>
 
 </mule>
