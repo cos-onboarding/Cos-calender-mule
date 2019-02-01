@@ -22,6 +22,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/getAllTimeSchedule" action="post" content-type="application/json" flow-ref="getAllTimeSchedule"/>
         <apikit:flow-mapping resource="/getStaffList" action="post" content-type="application/json" flow-ref="getStaffList"/>
         <apikit:flow-mapping resource="/getAllBranch" action="post" content-type="application/json" flow-ref="getAllBranch"/>
+        <apikit:flow-mapping resource="/getHeadOfficeList" action="post" content-type="application/json" flow-ref="getHeadOfficeList"/>
+        <apikit:flow-mapping resource="/getDayAllBranchScheduleList" action="post" content-type="application/json" flow-ref="getDayAllBranchSchedule"/>
+        <apikit:flow-mapping resource="/getDayBranchStaffInfo" action="post" content-type="application/json" flow-ref="getDayBranchStaffInfo"/>
+
     </apikit:config>
     <context:property-placeholder location="db.properties"/>
     <flow name="project_muleFlow">
@@ -87,6 +91,18 @@ payload]]></dw:set-payload>
 
         </db:select>
 
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="getHeadOfficeList">
+        <logger message="----------------------Enter the head office interface------------------" level="INFO" doc:name="Logger"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.headOfficeCalenderList}]]></db:parameterized-query>
+        </db:select>
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/json
@@ -222,6 +238,42 @@ payload]]></dw:set-payload>
     <flow name="getAllBranch" doc:description="&#33719;&#21462;&#25152;&#26377;&#20998;&#34892;&#20197;&#21450;&#32463;&#29702;&#21517;&#31216;">
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[${sql.getAllBranch}]]></db:parameterized-query>
+        </db:select>
+
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="getDayAllBranchSchedule">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.getAllBranchSchedule}]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="getDayBranchStaffInfo">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[${sql.getDayBranchStaffInfo}]]></db:dynamic-query>
+
         </db:select>
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0

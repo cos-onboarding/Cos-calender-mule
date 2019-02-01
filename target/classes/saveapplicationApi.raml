@@ -103,7 +103,36 @@ schemas:
           application/json:
             example: |
               {"message": "login successfully"}
-              
+/getHeadOfficeList:
+  post:
+    body:
+      application/json:     
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "response successfully"}
+/getDayAllBranchScheduleList:
+  post:
+    body:
+      application/json:     
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "response successfully"}
+/getDayBranchStaffInfo:
+  post:
+    body:
+      application/json:     
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "response successfully"}
 #获取分行列表
 /getAllBranch:
   post:
