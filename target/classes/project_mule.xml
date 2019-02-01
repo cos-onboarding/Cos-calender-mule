@@ -22,13 +22,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/getAllTimeSchedule" action="post" content-type="application/json" flow-ref="getAllTimeSchedule"/>
         <apikit:flow-mapping resource="/getStaffList" action="post" content-type="application/json" flow-ref="getStaffList"/>
         <apikit:flow-mapping resource="/getAllBranch" action="post" content-type="application/json" flow-ref="getAllBranch"/>
-<<<<<<< HEAD
         <apikit:flow-mapping resource="/getHeadOfficeList" action="post" content-type="application/json" flow-ref="getHeadOfficeList"/>
         <apikit:flow-mapping resource="/getDayAllBranchScheduleList" action="post" content-type="application/json" flow-ref="getDayAllBranchSchedule"/>
         <apikit:flow-mapping resource="/getDayBranchStaffInfo" action="post" content-type="application/json" flow-ref="getDayBranchStaffInfo"/>
-=======
         <apikit:flow-mapping resource="/dragAndDrop" action="post" content-type="application/json" flow-ref="dragAndDrop"/>
->>>>>>> ea9ee4e0addb9a6f2a309b5c7fde8d6fb06f37b1
+
 
     </apikit:config>
     <context:property-placeholder location="db.properties"/>
