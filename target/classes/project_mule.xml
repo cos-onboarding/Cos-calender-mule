@@ -26,6 +26,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/getDayAllBranchScheduleList" action="post" content-type="application/json" flow-ref="getDayAllBranchSchedule"/>
         <apikit:flow-mapping resource="/getDayBranchStaffInfo" action="post" content-type="application/json" flow-ref="getDayBranchStaffInfo"/>
         <apikit:flow-mapping resource="/dragAndDrop" action="post" content-type="application/json" flow-ref="dragAndDrop"/>
+        <apikit:flow-mapping resource="/saveBranchCalendar" action="post" content-type="application/json" flow-ref="saveBranchCalendarSchedule"/>
 
 
     </apikit:config>
@@ -297,6 +298,24 @@ payload]]></dw:set-payload>
         <db:update config-ref="MySQL_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[${sql.dragAndDrop}]]></db:parameterized-query>
         </db:update>
+    </flow>
+    <flow name="saveBranchCalendarSchedule">
+        <logger message="----------start" level="INFO" doc:name="Logger"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload.newSchedule]]></dw:set-payload>
+        </dw:transform-message>
+        <set-variable variableName="newSchedule" value="#[payload.newSchedule]" doc:name="Variable"/>
+        <foreach collection="payload" doc:name="For Each">
+            <set-payload value="#[payload]" doc:name="Set Payload"/>
+            <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+                <db:parameterized-query><![CDATA[${sql.saveBranchScheduleInfo}]]></db:parameterized-query>
+            </db:insert>
+            <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        </foreach>
+        <logger message="--------------------end" level="INFO" doc:name="Logger"/>
     </flow>
 
 </mule>

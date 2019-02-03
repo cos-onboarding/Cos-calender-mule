@@ -164,3 +164,18 @@ schemas:
           application/json:
             example: |
               {"message": "login successfully"}
+              
+/saveBranchCalendar:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}
