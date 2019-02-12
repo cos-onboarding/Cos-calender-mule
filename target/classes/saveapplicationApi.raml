@@ -209,3 +209,32 @@ schemas:
           application/json:
             example: |
               {"message": "login successfully"}
+/getDistributeTaskList:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}
+              
+/updateDistributeTask:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}
