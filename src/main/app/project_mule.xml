@@ -29,6 +29,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/saveBranchCalendar" action="post" content-type="application/json" flow-ref="saveBranchCalendarSchedule"/>
         <apikit:flow-mapping resource="/everyDayCount" action="post" content-type="application/json" flow-ref="everyDayCount"/>
         <apikit:flow-mapping resource="/deleteSchdule" action="post" content-type="application/json" flow-ref="deleteSchdule"/>
+        <apikit:flow-mapping resource="/updateDistributeTask" action="post" content-type="application/json" flow-ref="updateDistributeTask"/>
+        <apikit:flow-mapping resource="/getDistributeTaskList" action="post" content-type="application/json" flow-ref="getDistributeTask"/>
+
 
 
 
@@ -328,6 +331,24 @@ payload]]></dw:set-payload>
 ---
 payload]]></dw:set-payload>
         </dw:transform-message>
+    </flow>
+    <flow name="updateDistributeTaskList">
+        <logger level="INFO" doc:name="Logger"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <db:update config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.updateDistributeTask}]]></db:parameterized-query>
+        </db:update>
+    </flow>
+    <flow name="getDistributeTask">
+        <logger level="INFO" doc:name="Logger"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.getDistributeTask}]]></db:parameterized-query>
+        </db:select>
     </flow>
 
 </mule>
