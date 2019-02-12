@@ -29,8 +29,8 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/saveBranchCalendar" action="post" content-type="application/json" flow-ref="saveBranchCalendarSchedule"/>
         <apikit:flow-mapping resource="/everyDayCount" action="post" content-type="application/json" flow-ref="everyDayCount"/>
         <apikit:flow-mapping resource="/deleteSchdule" action="post" content-type="application/json" flow-ref="deleteSchdule"/>
-        <apikit:flow-mapping resource="/getDistributeTaskList" action="post" content-type="application/json" flow-ref="getDistributeTask"/>
         <apikit:flow-mapping resource="/updateDistributeTask" action="post" content-type="application/json" flow-ref="updateDistributeTask"/>
+        <apikit:flow-mapping resource="/getDistributeTaskList" action="post" content-type="application/json" flow-ref="getDistributeTask"/>
 
 
 
@@ -330,6 +330,7 @@ payload]]></dw:set-payload>
 %output application/json
 ---
 payload]]></dw:set-payload>
+
         </dw:transform-message>
     </flow>
     <flow name="updateDistributeTask">
