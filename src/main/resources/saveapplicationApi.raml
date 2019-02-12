@@ -179,3 +179,33 @@ schemas:
           application/json:
             example: |
               {"message": "login successfully"}
+
+/everyDayCount:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}
+              
+/deleteSchdule:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}
