@@ -253,4 +253,18 @@ schemas:
           application/json:
             example: |
               {"message": "login successfully"}
- 
+
+/seePersonalNumber:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}

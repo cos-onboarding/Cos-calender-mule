@@ -32,6 +32,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/updateDistributeTask" action="post" content-type="application/json" flow-ref="updateDistributeTask"/>
         <apikit:flow-mapping resource="/getDistributeTaskList" action="post" content-type="application/json" flow-ref="getDistributeTask"/>
         <apikit:flow-mapping resource="/saveTaskQuantity" action="post" content-type="application/json" flow-ref="saveTaskQuantity"/>
+        <apikit:flow-mapping resource="/seePersonalNumber" action="post" content-type="application/json" flow-ref="seePersonalNumber"/>
 
 
 
@@ -185,6 +186,13 @@ payload]]></dw:set-payload>
     </flow>
 
     <flow name="getStaffList" doc:description="&#33719;&#21462;&#25152;&#26377;&#21592;&#24037;&#21015;&#34920;&#65288;&#38656;&#35201;&#25913;&#21160;&#65289;">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <set-variable variableName="bid" value="#[payload.bid]" doc:name="Variable"/>
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[${sql.getStaffList}]]></db:parameterized-query>
 
@@ -205,6 +213,8 @@ payload]]></dw:set-payload>
         </dw:transform-message>
         <set-payload value="#[payload.schedule]" encoding="UTF-8" doc:name="Set Payload"/>
         <set-variable variableName="id" value="#[payload.id]" doc:name="Variable"/>
+        <set-variable variableName="infoId" value="#[payload.infoId]" encoding="UTF-8" doc:name="Variable"/>
+        <set-variable variableName="userId" value="#[payload.userId]" doc:name="Variable"/>
         <transactional action="ALWAYS_BEGIN" doc:name="Transactional">
             <choice doc:name="Choice">
                 <when expression="payload.id ==0">
@@ -212,6 +222,9 @@ payload]]></dw:set-payload>
                     <db:insert config-ref="MySQL_Configuration" doc:name="Database">
                         <db:parameterized-query><![CDATA[${sql.saveCalenderSchedule}]]></db:parameterized-query>
                     </db:insert>
+                    <db:update config-ref="MySQL_Configuration" doc:name="Database">
+                        <db:parameterized-query><![CDATA[${sql.updatePlusCount}]]></db:parameterized-query>
+                    </db:update>
                 </when>
                 <otherwise>
                     <logger level="INFO" doc:name="Logger"/>
@@ -231,9 +244,14 @@ payload]]></dw:set-payload>
 payload]]></dw:set-payload>
         </dw:transform-message>
         <set-variable variableName="id" value="#[payload.id]" doc:name="Variable"/>
+        <set-variable variableName="userId" value="#[payload.userId]" doc:name="Variable"/>
+        <set-variable variableName="timeStamp" value="#[payload.timeStamp]" doc:name="Variable"/>
         <db:delete config-ref="MySQL_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[${sql.deleteCalenderSchedule}]]></db:parameterized-query>
         </db:delete>
+        <db:update config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.updateReduceCount}]]></db:parameterized-query>
+        </db:update>
     </flow>
     <flow name="getAllBranch" doc:description="&#33719;&#21462;&#25152;&#26377;&#20998;&#34892;&#20197;&#21450;&#32463;&#29702;&#21517;&#31216;">
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
@@ -385,5 +403,23 @@ payload]]></dw:set-payload>
                 </db:update>
             </otherwise>
         </choice>
+    </flow>
+    <flow name="seePersonalNumber">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <set-payload value="#[payload]" doc:name="Set Payload"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.seePersonalNumber}]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
     </flow>
 </mule>
