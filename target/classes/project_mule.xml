@@ -240,12 +240,14 @@ payload]]></dw:set-payload>
             <db:parameterized-query><![CDATA[${sql.getAllBranch}]]></db:parameterized-query>
         </db:select>
 
+
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/json
 ---
 payload]]></dw:set-payload>
         </dw:transform-message>
+
     </flow>
     <flow name="getDayAllBranchSchedule">
         <dw:transform-message doc:name="Transform Message">
@@ -307,9 +309,10 @@ payload.newSchedule]]></dw:set-payload>
         <set-variable variableName="newSchedule" value="#[payload.newSchedule]" doc:name="Variable"/>
         <foreach collection="payload" doc:name="For Each">
             <set-payload value="#[payload]" doc:name="Set Payload"/>
-            <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:update config-ref="MySQL_Configuration" doc:name="Database">
                 <db:parameterized-query><![CDATA[${sql.saveBranchScheduleInfo}]]></db:parameterized-query>
-            </db:insert>
+
+            </db:update>
             <logger message="#[payload]" level="INFO" doc:name="Logger"/>
         </foreach>
         <logger message="--------------------end" level="INFO" doc:name="Logger"/>
@@ -352,6 +355,12 @@ payload]]></dw:set-payload>
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[${sql.getDistributeTask}]]></db:parameterized-query>
         </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
     </flow>
     <flow name="saveTaskQuantity">
         <dw:transform-message doc:name="Transform Message">
@@ -374,6 +383,7 @@ payload]]></dw:set-payload>
                 <db:update config-ref="MySQL_Configuration" doc:name="Database">
                     <db:parameterized-query><![CDATA[${sql.updataTaskQuantity}]]></db:parameterized-query>
                 </db:update>
+
             </otherwise>
         </choice>
     </flow>
