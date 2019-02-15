@@ -268,3 +268,45 @@ schemas:
           application/json:
             example: |
               {"message": "login successfully"}
+/editBranchInfo:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}
+/delBranchInfo:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}
+/getBranchInfo:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "name":"admin"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "login successfully"}

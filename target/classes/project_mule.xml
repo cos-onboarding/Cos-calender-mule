@@ -33,6 +33,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:flow-mapping resource="/getDistributeTaskList" action="post" content-type="application/json" flow-ref="getDistributeTask"/>
         <apikit:flow-mapping resource="/saveTaskQuantity" action="post" content-type="application/json" flow-ref="saveTaskQuantity"/>
         <apikit:flow-mapping resource="/seePersonalNumber" action="post" content-type="application/json" flow-ref="seePersonalNumber"/>
+        <apikit:flow-mapping resource="/editBranchInfo" action="post" content-type="application/json" flow-ref="editBranchInfo"/>
+        <apikit:flow-mapping resource="/delBranchInfo" action="post" content-type="application/json" flow-ref="delBranchInfo"/>
+        <apikit:flow-mapping resource="/getBranchInfo" action="post" content-type="application/json" flow-ref="getBranchInfo"/>
+
 
 
 
@@ -401,7 +405,6 @@ payload]]></dw:set-payload>
                 <db:update config-ref="MySQL_Configuration" doc:name="Database">
                     <db:parameterized-query><![CDATA[${sql.updataTaskQuantity}]]></db:parameterized-query>
                 </db:update>
-
             </otherwise>
         </choice>
     </flow>
@@ -422,5 +425,72 @@ payload]]></dw:set-payload>
 ---
 payload]]></dw:set-payload>
         </dw:transform-message>
+    </flow>
+    <flow name="editBranchInfo">
+        <logger message="-------------edit (update, insert) inertface " level="INFO" doc:name="Logger"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <choice doc:name="Choice">
+            <when expression="#[payload.branchId]!=null">
+                <logger message="-------------update interface" level="INFO" doc:name="Logger"/>
+                <db:update config-ref="MySQL_Configuration" doc:name="Database">
+                    <db:parameterized-query><![CDATA[${sql.updateBranchInfo}]]></db:parameterized-query>
+                </db:update>
+            </when>
+            <otherwise>
+                <logger message="-----------insert interface" level="INFO" doc:name="Logger"/>
+                <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+                    <db:parameterized-query><![CDATA[${sql.addNewBranchInfo}]]></db:parameterized-query>
+                </db:insert>
+            </otherwise>
+        </choice>
+        <logger message="--------------end" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getBranchInfo">
+        <logger message="------------select branch data list" level="INFO" doc:name="Logger"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[${sql.getAllBranchInfoList}]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="delBranchInfo">
+        <logger level="INFO" doc:name="Logger"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <choice doc:name="Choice">
+            <when expression="#[payload.branchId]!=''">
+                <foreach collection="#[payload.]" doc:name="For Each">
+                    <set-payload doc:name="Set Payload" value="#[payload]"/>
+                    <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+                        <db:parameterized-query><![CDATA[${sql.deleteBranchInfo}]]></db:parameterized-query>
+                    </db:delete>
+                </foreach>
+            </when>
+            <otherwise>
+                <logger message="------------fail" level="INFO" doc:name="Logger"/>
+                <dw:transform-message doc:name="Transform Message">
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+{
+	message:fail
+}]]></dw:set-payload>
+                </dw:transform-message>
+            </otherwise>
+        </choice>
+        <logger message="--------end" level="INFO" doc:name="Logger"/>
     </flow>
 </mule>
